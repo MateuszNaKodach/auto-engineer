@@ -1,3 +1,18 @@
+// Events
+import { CartCreated } from './events/CartCreated.event.json';
+import { ItemAddedToCart } from './events/ItemAddedToCart.event.json';
+import { ItemRemovedFromCart } from './events/ItemRemovedFromCart.event.json';
+import { OrderCreated } from './events/OrderCreated.event.json';
+import { CartCleared } from './events/CartCleared.event.json';
+
+// Commands
+import { AddItemToCart } from './commands/AddItemToCart.command.json';
+import { RemoveItemFromCart } from './commands/RemoveItemFromCart.command.json';
+import { CheckoutCart } from './commands/CheckoutCart.command.json';
+
+// Queries
+import { CartQuery, CartResponse } from './queries/Cart.schema.gql';
+
 Flow: ShoppingCart
   Slice: Add item to cart
     Frontend: Add to Cart Button
