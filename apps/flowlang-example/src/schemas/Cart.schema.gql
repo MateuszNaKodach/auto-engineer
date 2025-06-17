@@ -1,0 +1,17 @@
+type Query {
+  cart(cartId: String!): Cart
+}
+
+type Cart {
+  cartId: String!
+  userId: String!
+  items: [CartItem!]!
+  totalItems: Int!
+  totalAmount: Float!
+}
+
+type CartItem {
+  itemId: String!
+  quantity: Int!
+  price: Float!
+} 

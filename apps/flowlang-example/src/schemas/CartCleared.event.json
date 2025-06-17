@@ -1,0 +1,18 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "CartCleared",
+  "type": "object",
+  "properties": {
+    "cartId": {
+      "type": "string",
+      "description": "Unique identifier for the shopping cart"
+    },
+    "totalItems": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Total number of items in the cart (should be 0 after clearing)"
+    }
+  },
+  "required": ["cartId", "totalItems"],
+  "additionalProperties": false
+} 

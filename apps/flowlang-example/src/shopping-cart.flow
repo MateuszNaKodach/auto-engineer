@@ -1,0 +1,209 @@
+Flow: ShoppingCart
+  Slice: Add item to cart
+    Frontend: Add to Cart Button
+      A UI with a button to add items to the shopping cart
+      
+      Specs: Add to cart button
+        Should be a green CTA color
+        Should show item name and price
+
+    Backend: Add item to cart
+      Adds a given item to the shopping cart
+      
+      Rule: Items are added to cart incrementally
+        Example: Item is added to an empty cart
+          Given CartCreated
+          ```json
+          {
+            "cartId": "cart_123",
+            "userId": "user_456"
+          }
+          ```
+          When AddItemToCart
+          ```json
+          {
+            "cartId": "cart_123",
+            "itemId": "item_789",
+            "quantity": 2,
+            "price": 29.99
+          }
+          ```
+          Then ItemAddedToCart
+          ```json
+          {
+            "cartId": "cart_123",
+            "itemId": "item_789",
+            "quantity": 2,
+            "price": 29.99,
+            "totalItems": 2
+          }
+          ```
+
+  Slice: Remove item from cart
+    Frontend: Remove from Cart Button
+      A UI with a button to remove items from the shopping cart
+      
+      Specs: Remove button
+        Should be a red color
+        Should show confirmation dialog
+
+    Backend: Remove item from cart
+      Removes a given item from the shopping cart
+      
+      Rule: Items are removed from cart
+        Example: Item is removed from cart with multiple items
+          Given ItemAddedToCart
+          ```json
+          {
+            "cartId": "cart_123",
+            "itemId": "item_789",
+            "quantity": 2,
+            "price": 29.99,
+            "totalItems": 2
+          }
+          ```
+          When RemoveItemFromCart
+          ```json
+          {
+            "cartId": "cart_123",
+            "itemId": "item_789",
+            "quantity": 1
+          }
+          ```
+          Then ItemRemovedFromCart
+          ```json
+          {
+            "cartId": "cart_123",
+            "itemId": "item_789",
+            "quantity": 1,
+            "totalItems": 1
+          }
+          ```
+
+  Slice: View cart content
+    Frontend: Cart Display
+      A UI component that displays the current cart contents
+      
+      Specs: Cart display
+        Should show all items with quantities and prices
+        Should show total amount
+
+    Backend: Cart projection
+      Projects cart state from events for display
+      
+      Rule: Cart state is projected from events
+        Example: Cart with multiple items is viewed
+          Given CartCreated
+          ```json
+          {
+            "cartId": "cart_123",
+            "userId": "user_456"
+          }
+          ```
+          And ItemAddedToCart
+          ```json
+          {
+            "cartId": "cart_123",
+            "itemId": "item_789",
+            "quantity": 2,
+            "price": 29.99,
+            "totalItems": 2
+          }
+          ```
+          And ItemAddedToCart
+          ```json
+          {
+            "cartId": "cart_123",
+            "itemId": "item_101",
+            "quantity": 1,
+            "price": 15.50,
+            "totalItems": 3
+          }
+          ```
+          When CartQuery (Cart.schema.gql)
+          ```gql
+          query CartQuery($cartId: String!) {
+            cart(cartId: $cartId) {
+              cartId
+              userId
+              items {
+                itemId
+                quantity
+                price
+              }
+              totalItems
+              totalAmount
+            }
+          }
+          ```
+          Then CartResponse (Cart.schema.gql)
+          ```json
+          {
+            "cartId": "cart_123",
+            "userId": "user_456",
+            "items": [
+              {
+                "itemId": "item_789",
+                "quantity": 2,
+                "price": 29.99
+              },
+              {
+                "itemId": "item_101",
+                "quantity": 1,
+                "price": 15.50
+              }
+            ],
+            "totalItems": 3,
+            "totalAmount": 75.48
+          }
+          ```
+
+  Slice: Checkout cart
+    Frontend: Checkout Button
+      A UI with a button to checkout the shopping cart
+      
+      Specs: Checkout button
+        Should be disabled when cart is empty
+        Should be a blue primary color
+
+    Backend: Process checkout
+      Processes the checkout of the shopping cart
+      
+      Rule: Cart is converted to order
+        Example: Cart with items is checked out
+          Given ItemAddedToCart
+          ```json
+          {
+            "cartId": "cart_123",
+            "itemId": "item_789",
+            "quantity": 2,
+            "price": 29.99,
+            "totalItems": 2
+          }
+          ```
+          When CheckoutCart
+          ```json
+          {
+            "cartId": "cart_123",
+            "userId": "user_456",
+            "shippingAddress": "123 Main St",
+            "paymentMethod": "credit_card"
+          }
+          ```
+          Then OrderCreated
+          ```json
+          {
+            "orderId": "order_456",
+            "cartId": "cart_123",
+            "userId": "user_456",
+            "totalAmount": 59.98,
+            "status": "pending"
+          }
+          ```
+          And CartCleared
+          ```json
+          {
+            "cartId": "cart_123",
+            "totalItems": 0
+          }
+          ``` 

@@ -1,0 +1,27 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "ItemRemovedFromCart",
+  "type": "object",
+  "properties": {
+    "cartId": {
+      "type": "string",
+      "description": "Unique identifier for the shopping cart"
+    },
+    "itemId": {
+      "type": "string",
+      "description": "Unique identifier for the item that was removed"
+    },
+    "quantity": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "Quantity of the item that was removed"
+    },
+    "totalItems": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Total number of items in the cart after removing"
+    }
+  },
+  "required": ["cartId", "itemId", "quantity", "totalItems"],
+  "additionalProperties": false
+} 
