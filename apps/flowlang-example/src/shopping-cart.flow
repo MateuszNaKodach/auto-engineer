@@ -135,7 +135,7 @@ Flow: ShoppingCart
             "totalItems": 3
           }
           ```
-          When CartQuery (Cart.schema.gql)
+          When Query
           ```gql
           query CartQuery($cartId: String!) {
             cart(cartId: $cartId) {
@@ -151,7 +151,7 @@ Flow: ShoppingCart
             }
           }
           ```
-          Then CartResponse (Cart.schema.gql)
+          Then Response
           ```json
           {
             "cartId": "cart_123",
